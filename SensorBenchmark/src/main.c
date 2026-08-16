@@ -1,34 +1,4 @@
-Act as an expert React Developer.
-Context: I want to restructure my DSA Presentation Dashboard by adding a Top Navigation Menu Bar to switch between different Case Studies.
-Tech Stack: React, Tailwind CSS.
-
-Task Requirements:
-
-Create a Navigation Bar Component:
-
-Build a clean, horizontal Top Menu Bar.
-
-Include 5 clickable tabs: "Overview", "Case Study 1: Array", "Case Study 2: Prefix Sum", "Case Study 3: BIT", "Case Study 4: Segment Tree".
-
-Highlight the currently active tab using the existing Cyan-400 theme color.
-
-Implement View Switching (Routing/State):
-
-You can use either a simple state-based approach (e.g., const [activeTab, setActiveTab] = useState('overview')) or react-router-dom if it's already installed.
-
-Overview Tab: Render the existing full dashboard component (with the grids, charts, and both trees).
-
-Case Study 1 Tab: Render the newly created ArrayDemo component.
-
-Case Study 2, 3, 4 Tabs: Render simple placeholder components (e.g., a centered div saying "Coming Soon" or "Placeholder for Prefix Sum/BIT/Segment Tree") so I can fill them in later.
-
-Styling:
-
-Make the Navigation Bar sticky at the top so it remains visible when scrolling.
-
-Ensure the styling remains consistent with the Deep Slate/Cyan/Orange tech theme.
-
-Please update App.jsx (and any related files) to implement this navigation structure.#include <errno.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

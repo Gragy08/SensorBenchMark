@@ -8,7 +8,7 @@ const INITIAL_VALUES = [
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const clampDay = (value) => Math.min(Math.max(value, 0), INITIAL_VALUES.length - 1)
+const clampDay = (value) => Math.min(Math.max(value, 1), INITIAL_VALUES.length)
 
 export default function ArrayDemo() {
   const [values, setValues] = useState(INITIAL_VALUES)
@@ -27,23 +27,24 @@ export default function ArrayDemo() {
   )
 
   const currentRangeTotal = useMemo(() => {
-    const start = Math.min(queryStart, queryEnd)
-    const end = Math.max(queryStart, queryEnd)
+    const start = Math.min(queryStart, queryEnd) - 1
+    const end = Math.max(queryStart, queryEnd) - 1
     return values.slice(start, end + 1).reduce((sum, value) => sum + value, 0)
   }, [queryEnd, queryStart, values])
 
   const handlePointUpdate = () => {
-    const normalizedDay = clampDay(Number(updateDay) || 0)
+    const userDay = clampDay(Number(updateDay) || 1)
+    const zeroIndex = userDay - 1
 
     setValues((previousValues) =>
       previousValues.map((value, index) =>
-        index === normalizedDay ? value + 1500 : value,
+        index === zeroIndex ? value + 1500 : value,
       ),
     )
 
-    setLastUpdated(normalizedDay)
+    setLastUpdated(zeroIndex)
     setActiveRange([])
-    setFlashIndex(normalizedDay)
+    setFlashIndex(zeroIndex)
 
     window.setTimeout(() => setFlashIndex(null), 700)
   }
@@ -51,8 +52,8 @@ export default function ArrayDemo() {
   const handleRangeQuery = async () => {
     if (isQuerying) return
 
-    const start = Math.min(queryStart, queryEnd)
-    const end = Math.max(queryStart, queryEnd)
+    const start = Math.min(queryStart, queryEnd) - 1
+    const end = Math.max(queryStart, queryEnd) - 1
 
     setIsQuerying(true)
     setRunningTotal(0)
@@ -73,23 +74,23 @@ export default function ArrayDemo() {
 
   return (
     <div className="min-h-screen bg-slate-100 px-4 py-10 text-slate-900 antialiased">
-      <div className="mx-auto max-w-6xl">
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] sm:p-8">
-          <header className="mb-8 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-500">
-              Case Study 1
-            </p>
-            <h2 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">
-              Raw Array
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600 sm:text-base">
-              Point update is <span className="font-semibold text-slate-900">O(1)</span> because it changes one indexed value directly.
-              Range sum is <span className="font-semibold text-slate-900">O(n)</span> because it must visit every value from L to R.
-            </p>
-          </header>
+      <div className="grid grid-cols-12 gap-6 w-full max-w-7xl mx-auto px-4">
+        <div className="col-span-9">
+          <div className="bg-white rounded-2xl shadow-xl p-8 w-full">
+            <header className="mb-8 text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-500">
+                Case Study 1
+              </p>
+              <h2 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+                Raw Array
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600 sm:text-base">
+                Point update is <span className="font-semibold text-slate-900">O(1)</span> because it changes one indexed value directly.
+                Range sum is <span className="font-semibold text-slate-900">O(n)</span> because it must visit every value from L to R.
+              </p>
+            </header>
 
-          <div className="grid gap-8 xl:grid-cols-[1.4fr_0.6fr]">
-            <div>
+            <div className="space-y-6">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <span className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
                   Days 1–14
@@ -99,8 +100,8 @@ export default function ArrayDemo() {
                 </span>
               </div>
 
-              <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex min-w-[760px] items-end justify-between gap-3">
+              <div className="w-full overflow-x-auto py-2 custom-scrollbar rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex min-w-max items-center justify-center gap-3 mx-auto px-4">
                   {values.map((value, index) => {
                     const isFlash = flashIndex === index
                     const isActive = activeRange.includes(index)
@@ -134,7 +135,7 @@ export default function ArrayDemo() {
                           damping: 18,
                           mass: 0.8,
                         }}
-                        className="flex w-16 min-w-[4rem] flex-col items-center rounded-2xl border bg-white p-2 text-center shadow-sm"
+                        className="flex min-w-[70px] flex-1 shrink-0 flex-col items-center rounded-2xl border bg-white px-2 py-2 text-center shadow-sm"
                       >
                         <span className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                           D{index + 1}
@@ -162,13 +163,17 @@ export default function ArrayDemo() {
 
                 <p className="mt-2 text-sm text-slate-600">
                   {isQuerying
-                    ? `Scanning days ${Math.min(queryStart, queryEnd) + 1} through ${Math.max(queryStart, queryEnd) + 1}...`
-                    : `Range sum for [${Math.min(queryStart, queryEnd) + 1}, ${Math.max(queryStart, queryEnd) + 1}] = ${currentRangeTotal.toLocaleString()}`}
+                    ? `Scanning days ${Math.min(queryStart, queryEnd)} through ${Math.max(queryStart, queryEnd)}...`
+                    : `Range sum for [${Math.min(queryStart, queryEnd)}, ${Math.max(queryStart, queryEnd)}] = ${currentRangeTotal.toLocaleString()}`}
                 </p>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="space-y-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+        <div className="col-span-3">
+          <div className="bg-white rounded-2xl shadow-xl p-5 w-full h-full">
+            <div className="space-y-5">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
                   Point Update
@@ -176,10 +181,10 @@ export default function ArrayDemo() {
                 <div className="flex gap-2">
                   <input
                     type="number"
-                    min="0"
-                    max="13"
+                    min="1"
+                    max="14"
                     value={updateDay}
-                    onChange={(event) => setUpdateDay(Math.min(13, Math.max(0, Number(event.target.value) || 0)))}
+                    onChange={(event) => setUpdateDay(Math.min(14, Math.max(1, Number(event.target.value) || 1)))}
                     className="w-20 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 outline-none ring-0 transition focus:border-cyan-400"
                   />
                   <button
@@ -187,7 +192,7 @@ export default function ArrayDemo() {
                     onClick={handlePointUpdate}
                     className="flex-1 rounded-xl bg-orange-500 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600"
                   >
-                    Update Day {Number(updateDay) + 1}
+                    Update Day {Number(updateDay)}
                   </button>
                 </div>
                 <p className="mt-2 text-xs text-slate-500">
@@ -202,19 +207,19 @@ export default function ArrayDemo() {
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="number"
-                    min="0"
-                    max="13"
+                    min="1"
+                    max="14"
                     value={queryStart}
-                    onChange={(event) => setQueryStart(Math.min(13, Math.max(0, Number(event.target.value) || 0)))}
+                    onChange={(event) => setQueryStart(Math.min(14, Math.max(1, Number(event.target.value) || 1)))}
                     className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 outline-none transition focus:border-cyan-400"
                     placeholder="L"
                   />
                   <input
                     type="number"
-                    min="0"
-                    max="13"
+                    min="1"
+                    max="14"
                     value={queryEnd}
-                    onChange={(event) => setQueryEnd(Math.min(13, Math.max(0, Number(event.target.value) || 0)))}
+                    onChange={(event) => setQueryEnd(Math.min(14, Math.max(1, Number(event.target.value) || 1)))}
                     className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 outline-none transition focus:border-cyan-400"
                     placeholder="R"
                   />
@@ -230,7 +235,7 @@ export default function ArrayDemo() {
                 </button>
 
                 <p className="mt-2 text-xs text-slate-500">
-                  Traversal from Day {Math.min(queryStart, queryEnd) + 1} to Day {Math.max(queryStart, queryEnd) + 1}
+                  Traversal from Day {Math.min(queryStart, queryEnd)} to Day {Math.max(queryStart, queryEnd)}
                 </p>
               </div>
 
