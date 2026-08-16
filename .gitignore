@@ -1,0 +1,34 @@
+# ========================
+# 1. Dashboard (React/Node)
+# ========================
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.env
+dashboard/.eslintcache
+
+# ========================
+# 2. Backend (FastAPI/Python)
+# ========================
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+
+# ========================
+# 3. Core C (CMake)
+# ========================
+SensorBenchmark/build/
+SensorBenchmark/build-release/
+SensorBenchmark/CMakeCache.txt
+SensorBenchmark/CMakeFiles/
+SensorBenchmark/*.exe
+SensorBenchmark/*.o
+SensorBenchmark/*.obj
+
+# ========================
+# 4. OS & IDE
+# ========================
+.vscode/
+.DS_Store
+*.log
+verify_cli.py

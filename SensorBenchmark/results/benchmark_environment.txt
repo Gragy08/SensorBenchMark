@@ -1,0 +1,16 @@
+Compiler: GCC 16.1.0
+C standard value: 201112
+Build mode: Release
+sizeof(StepCount): 8 bytes
+sizeof(DataIndex): 8 bytes
+sizeof(Operation): 32 bytes
+sizeof(SegmentNode): 24 bytes
+Dataset size: 100000
+Operation count: 100000
+Benchmark runs: 5
+Random seed: 2026
+Step count range: 1000 to 20000
+Query percentage: 70
+Update percentage: 30
+Time unit: milliseconds
+Memory metric: estimated bytes
