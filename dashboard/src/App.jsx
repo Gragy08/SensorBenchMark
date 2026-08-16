@@ -27,26 +27,28 @@ const queryOptions = [
   { id: 'point', label: 'Point Update', accent: 'orange' },
 ]
 
-const benchmarkProfiles = {
-  'N=1,000': [
-    { name: 'Array', query: 1.4, update: 0.7 },
-    { name: 'Prefix Sum', query: 0.9, update: 1.8 },
-    { name: 'BIT', query: 0.5, update: 0.6 },
-    { name: 'Segment Tree', query: 0.8, update: 0.9 },
+const realBenchmarkData = {
+  'N=1000': [
+    { name: 'Array', query: 0.260, update: 0.019 },
+    { name: 'Prefix Sum', query: 0.014, update: 0.098 },
+    { name: 'BIT', query: 0.016, update: 0.020 },
+    { name: 'Segment Tree', query: 0.260, update: 0.073 },
   ],
-  'N=10,000': [
-    { name: 'Array', query: 11.2, update: 5.6 },
-    { name: 'Prefix Sum', query: 8.3, update: 15.9 },
-    { name: 'BIT', query: 3.7, update: 3.1 },
-    { name: 'Segment Tree', query: 4.8, update: 4.1 },
+  'N=10000': [
+    { name: 'Array', query: 21.556, update: 0.193 },
+    { name: 'Prefix Sum', query: 0.143, update: 6.775 },
+    { name: 'BIT', query: 0.170, update: 0.319 },
+    { name: 'Segment Tree', query: 3.282, update: 1.038 },
   ],
-  'N=100,000': [
-    { name: 'Array', query: 124.8, update: 53.1 },
-    { name: 'Prefix Sum', query: 92.7, update: 142.5 },
-    { name: 'BIT', query: 29.4, update: 31.8 },
-    { name: 'Segment Tree', query: 38.9, update: 35.4 },
+  'N=100000': [
+    { name: 'Array', query: 2013.588, update: 2.175 },
+    { name: 'Prefix Sum', query: 1.509, update: 568.914 },
+    { name: 'BIT', query: 1.912, update: 3.545 },
+    { name: 'Segment Tree', query: 51.282, update: 16.273 },
   ],
 }
+
+const benchmarkProfiles = realBenchmarkData
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -127,7 +129,7 @@ function OverviewDashboard() {
   const [queryMode, setQueryMode] = useState('sum')
   const [range, setRange] = useState([3, 9])
   const [selectedDay, setSelectedDay] = useState(6)
-  const [benchmarkScale, setBenchmarkScale] = useState('N=10,000')
+  const [benchmarkScale, setBenchmarkScale] = useState('N=10000')
   const [activePath, setActivePath] = useState([6, 3, 1])
   const [isSyncing, setIsSyncing] = useState(false)
   const [backendData, setBackendData] = useState(null)
@@ -543,7 +545,7 @@ function OverviewDashboard() {
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
                   <XAxis dataKey="name" stroke="#475569" />
-                  <YAxis stroke="#475569" />
+                  <YAxis stroke="#475569" domain={['auto', 'auto']} />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="query" name="Query Time (ms)" fill="#22d3ee" radius={[8, 8, 0, 0]} />

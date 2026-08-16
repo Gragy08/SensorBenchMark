@@ -1,4 +1,4 @@
-Compiler: GCC 16.1.0
+Compiler: GCC 13.2.0
 C standard value: 201112
 Build mode: Release
 sizeof(StepCount): 8 bytes
